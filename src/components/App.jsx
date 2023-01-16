@@ -7,17 +7,31 @@ import { nanoid } from 'nanoid';
 import { MainHeader, SubHeader } from './Typography';
 import ContactList from './ContactList';
 import Filter from './Filter';
+import {
+  getFromLocalStorage,
+  LS_CONTACTS,
+  setToLocalStorage,
+} from 'services/localStorage';
 
 export default class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const data = getFromLocalStorage(LS_CONTACTS);
+
+    if (!data || data?.length === 0) return;
+
+    this.setState({ contacts: data });
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      setToLocalStorage(LS_CONTACTS, this.state.contacts);
+    }
+  }
 
   addContact = ({ name, number }) => {
     const { contacts } = this.state;
