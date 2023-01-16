@@ -9,7 +9,9 @@ export const setToLocalStorage = (key, data) => {
 export const getFromLocalStorage = key => {
 try {
     return JSON.parse(localStorage.getItem(key));
+    
 } catch (err) {
     toast.error(err.message);
 }
+
 };
